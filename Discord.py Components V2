@@ -1,0 +1,66 @@
+Components V2 (LayoutView, TextDisplay, Container) chỉ hoạt động trên phiên bản discord.py mới (development branch hoặc 2.4+).
+
+Nếu bị lỗi AttributeError: module 'discord.ui' has no attribute 'LayoutView' → bạn đang dùng bản cũ.
+Components V2 in discord.py 2.4+ uses:
+discord.ui.LayoutView
+discord.ui.Container
+discord.ui.Section
+discord.ui.TextDisplay
+discord.ui.Thumbnail
+discord.ui.MediaGallery
+discord.ui.ActionRow
+discord.ui.Button
+discord.ui.Separator
+Ví dụ code cho python components v2 import discord
+from discord.ext import commands
+
+intents = discord.Intents.default()
+intents.message_content = True
+
+bot = commands.Bot('!', intents=intents)
+
+class Components(discord.ui.LayoutView):    
+    container1 = discord.ui.Container(
+        discord.ui.Section(
+            discord.ui.TextDisplay(content="True wisdom comes from dance with socks on your hands during awkward times."),
+            accessory=discord.ui.Thumbnail(
+                media="https://cdn.discordapp.com/avatars/1142053791781355561/e599a27cab1ca92a444ed2839adbb4f9.png?size=1024",
+            ),
+        ),
+        discord.ui.File(
+            media="attachment://hosts.txt",
+        ),
+        discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
+        discord.ui.MediaGallery(
+            discord.MediaGalleryItem(
+                media="https://cdn.discordapp.com/banners/1205613504808357888/a_fef2751c07efa7a14abe0e968bdac50f.gif?size=2048",
+            ),
+        ),
+        discord.ui.ActionRow(
+                discord.ui.Button(
+                    url="https://google.com",
+                    style=discord.ButtonStyle.link,
+                    label="Adorable Dinosaur",
+                ),
+        ),
+        discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
+        discord.ui.ActionRow(
+                discord.ui.Select(
+                    custom_id="5cdc73a67be94dcadc30e0ffe36ba881",
+                    options=[
+                        discord.SelectOption(
+                            label="Colorful Wildcat",
+                            value="ce3eead68a20400ffda0866eb09002de",
+                        ),
+                    ],
+                ),
+        ),
+        discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
+        accent_colour=discord.Colour(1315860),
+    )
+
+
+@bot.command()
+async def send_components(ctx: commands.Context) -> None:
+    view = Components()
+    await ctx.send(view=view)
